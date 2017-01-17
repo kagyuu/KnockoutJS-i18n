@@ -1,87 +1,45 @@
-var topener = topener || {};
+ko.i18n = ko.i18n || {};
+ko.i18n.lang = ko.observable('en');
+ko.i18n.register = function(lang, version, dictionary) {
+  if (typeof(Storage) === 'undefined') {
+      console.log('[warn] web storage is not supported');
+      return;
+  }
 
-topener.i18n = function(){
-    var self = this;
-    
-    this.language = ko.observable('en');
-    
-    this.langVars = ko.computed(function(){
-        var r = {};
-        if (topener.lang[self.language()]){
-            r = topener.lang[self.language()];
-        } else {
-            r = topener.lang.en;
-        }
-        return r;
-    })
-    
-    this.vars = {};
-    
-    this.get = function(name, vars){
-        
-        var vars = vars || false;
-        
-        if (!vars){
-            return simpleComputed(name);
-        } else {
-            return varsComputed(name, vars);
-        }
-    
+  var lstorage = localStorage;
+  var localVersion = lstorage.getItem(lang + '.version');
+  if (!localVersion || localVersion < version) {
+    lstorage.setItem(lang + '.version', version);
+    for (key in dictionary) {
+      lstorage.setItem(lang + '.' + key, dictionary[key]);
     }
-    
-    var varsComputed = function(name, vars){
-        
-        self.vars[name] = ko.computed(function(){
-
-            if (!name){
-                return '';
-            }
-            
-            if (!self.langVars()[name]){
-                var message = 'var "' + name + '" not found';
-                console && console.warn && console.warn(message);
-                return message;
-            }
-            
-            var string = self.langVars()[name];
-            
-            
-            for (key in vars){
-                string = string.replace('%'+key+'%', vars[key]);
-            }
-            
-            return string;
-            
-        });
-        
-        return self.vars[name];
-        
-    }
-    
-    var simpleComputed = function(name){
-    
-        if (self.vars[name]){
-            return self.vars[name];
-        }
-        
-        self.vars[name] = ko.computed(function(){
-            
-            if (!name){
-                return '';
-            }
-            
-            if (!self.langVars()[name]){
-                var message = 'var "' + name + '" not found';
-                console && console.warn && console.warn(message);
-                return message;
-            }
-            
-            return self.langVars()[name];
-            
-        });
-        
-        return self.vars[name];    
-    }
-    
-    
+  }
 }
+
+ko.bindingHandlers.i18n = {
+  init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+    return { 'controlsDescendantBindings': true };
+  },
+  update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+    var lang = ko.i18n.lang();
+    if (!localStorage.getItem(lang + ".version")) {
+      lang = 'en';
+    }
+
+    var value = valueAccessor();
+    var idx = value;
+    var vars = {};
+    if ((typeof value) === 'object') {
+      idx = Object.keys(value)[0];
+      vars = value[idx];
+    }
+
+    var message = localStorage.getItem(lang + '.' + idx);
+    for (key in vars){
+        message = message.replace('%'+key+'%', vars[key]);
+    }
+
+    ko.utils.setTextContent(element, message);
+  }
+};
+ko.virtualElements.allowedBindings['i18n'] = true;

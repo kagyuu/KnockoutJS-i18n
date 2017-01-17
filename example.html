@@ -1,25 +1,24 @@
 <html>
 <head>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
+    <meta charset="utf-8">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
     <script src="topener-i18n.js"></script>
     <script src="langs/en.js"></script>
     <script src="langs/nl.js"></script>
+    <script src="langs/ja.js"></script>
 </head>
 <body>
+    <div data-bind="i18n: 'hello'"></div>
+    <div data-bind="i18n: {'hello_name': {'name' : 'John Doe'}}"></div>
 
-    <div data-bind="html: i18n.get('hello')"></div>
-    <div data-bind="html: i18n.get('hello_name',{'name' : 'John Doe'})"></div>
+    <button data-bind="click: function(){ ko.i18n.lang('en')}, i18n: {'change_lang' : {'lang' : 'EN'}}"></button>
+    <button data-bind="click: function(){ ko.i18n.lang('nl')}, i18n: {'change_lang' : {'lang' : 'NL'}}"></button>
+    <button data-bind="click: function(){ ko.i18n.lang('ja')}, i18n: {'change_lang' : {'lang' : 'JA'}}"></button>
+    <button data-bind="click: function(){ ko.i18n.lang('xx')}, i18n: {'change_lang' : {'lang' : 'XX'}}"></button>
 
-
-    <button data-bind="click: function(){ i18n.language('en')}, html: i18n.get('change_lang',{'lang' : 'EN'})"></button>
-    <button data-bind="click: function(){ i18n.language('nl')}, html: i18n.get('change_lang',{'lang' : 'NL'})"></button>
-    
     <script>
-        var i18n = new topener.i18n();
-        ko.applyBindings({
-            i18n : i18n
-        })
+  var viewModel = {};
+  ko.applyBindings(viewModel);
     </script>
-
 </body>
 </html>

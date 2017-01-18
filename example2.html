@@ -1,0 +1,20 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+    <script src="topener-i18n.js"></script>
+    <!-- we don't need import any lanugage messages,
+    because thease were stored in localstorage
+    when top-page was loaded.
+    -->
+</head>
+<body>
+    lang = <span data-bind="i18n: 'lang'"></span>
+    <hr>
+    <a href="example.html"><!-- ko i18n: 'prev' --><!-- /ko --></a>
+    <script>
+  var viewModel = {};
+  ko.applyBindings(viewModel);
+    </script>
+</body>
+</html>

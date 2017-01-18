@@ -15,7 +15,8 @@
     <button data-bind="click: function(){ ko.i18n.lang('nl')}, i18n: {'change_lang' : {'lang' : 'NL'}}"></button>
     <button data-bind="click: function(){ ko.i18n.lang('ja')}, i18n: {'change_lang' : {'lang' : 'JA'}}"></button>
     <button data-bind="click: function(){ ko.i18n.lang('xx')}, i18n: {'change_lang' : {'lang' : 'XX'}}"></button>
-
+    <hr>
+    <a href="example2.html"><!-- ko i18n: 'next' --><!-- /ko --></a>
     <script>
   var viewModel = {};
   ko.applyBindings(viewModel);
